@@ -24,6 +24,7 @@ AsteroidField::AsteroidField(QQuickItem * parent)
     connect(updater, &AsteroidUpdater::updatedAsteroids, this, &AsteroidField::asteroidsUpdated);
     connect(updater, &AsteroidUpdater::bulletCollided, this, &AsteroidField::bulletCollided);
     connect(updater, &AsteroidUpdater::shipDestroyed, this, &AsteroidField::shipDestroyed);
+    connect(updater, &AsteroidUpdater::bulletDestroyedAsteroids, this, &AsteroidField::incrementScore);
 }
 
 AsteroidField::~AsteroidField()
@@ -91,7 +92,7 @@ void AsteroidField::startField()
         QMetaObject::invokeMethod(creator, "createAsteroids");
         QMetaObject::invokeMethod(updater, "updateAsteroids");
     }
-
+    setAsteroidsShotDown(0);
 
 }
 
@@ -122,4 +123,9 @@ void AsteroidField::setShip(QQuickItem *arg)
 
     m_ship = arg;
     emit shipChanged(arg);
+}
+
+void AsteroidField::incrementScore(int by)
+{
+    setAsteroidsShotDown(asteroidsShotDown() + by);
 }

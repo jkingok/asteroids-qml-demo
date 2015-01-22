@@ -30,11 +30,12 @@ Window {
         states: [
             State {
                 name: "ready"
-
+                PropertyChanges {target: score; visible: false}
             },
             State {
                 name: "play"
                 PropertyChanges {target: startText; visible: false}
+                PropertyChanges {target: score; visible: true}
                 PropertyChanges {target: rocket; visible: true}
                 StateChangeScript {
                     name: "startGame"
@@ -282,5 +283,16 @@ Window {
         onBulletCollided: {
             bullet.collided();
         }
+    }
+
+    Text {
+        id: score
+
+        text: field.asteroidsShotDown
+        color: "white"
+        font.pixelSize: 24
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: parent.top
     }
 }

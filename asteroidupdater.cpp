@@ -86,7 +86,7 @@ void AsteroidUpdater::nextUpdate()
         // Check if it destroys any asteroids
         QRectF r1(b->x() / b->parentItem()->width(), b->y() / b->parentItem()->height(),
                   b->width() / b->parentItem()->width(), b->height() / b->parentItem()->height());
-        bool collided = false;
+        int collided = 0;
         it.toFront();
         while (it.hasNext()) {
             Asteroid * a = it.next();
@@ -94,14 +94,17 @@ void AsteroidUpdater::nextUpdate()
                       a->size(), a->size());
             if (r2.intersects(r1)) {
                 // Collision!
-                collided = true;
+                collided++;
                 it.remove();
                 delete a;
                 changed = true;
                 qDebug() << "Destroyed Asteroid by bullet";
             }
         }
-        if (collided) emit bulletCollided(b);
+        if (collided > 0) {
+            emit bulletCollided(b);
+            emit bulletDestroyedAsteroids(collided);
+        }
     }
 
     QQuickItem * ship = provider->ship();

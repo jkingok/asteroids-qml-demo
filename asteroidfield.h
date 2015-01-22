@@ -19,6 +19,7 @@ class AsteroidField : public QQuickPaintedItem, public AsteroidProvider
     Q_OBJECT
 
     Q_PROPERTY(QQuickItem * ship READ ship WRITE setShip NOTIFY shipChanged)
+    Q_PROPERTY(int asteroidsShotDown READ asteroidsShotDown WRITE setAsteroidsShotDown NOTIFY asteroidsShotDownChanged)
 
 public:
     AsteroidField(QQuickItem * parent = 0);
@@ -40,6 +41,15 @@ public slots:
 
     void setShip(QQuickItem * arg);
 
+    void setAsteroidsShotDown(int arg)
+    {
+        if (m_asteroidsShotDown == arg)
+            return;
+
+        m_asteroidsShotDown = arg;
+        emit asteroidsShotDownChanged(arg);
+    }
+
 protected:
     QThread taskThread;
     AsteroidCreator * creator;
@@ -49,6 +59,7 @@ protected:
     QList<QQuickItem *> bullets;
     QQuickItem * m_ship;
     QImage image;
+    int m_asteroidsShotDown;
 
     // AsteroidProvider interface
 public:
@@ -59,11 +70,20 @@ public:
     {
         return m_ship;
     }
+    int asteroidsShotDown() const
+    {
+        return m_asteroidsShotDown;
+    }
+
+private slots:
+    void incrementScore(int by);
+
 signals:
     void shipChanged(QQuickItem * arg);
 
     void shipDestroyed();
     void bulletCollided(QQuickItem * bullet);
+    void asteroidsShotDownChanged(int arg);
 };
 
 #endif // ASTEROIDFIELD_H

@@ -18,6 +18,7 @@ public:
 signals:
     shipDestroyed();
     bulletCollided(QQuickItem * b);
+    bulletDestroyedAsteroids(int number);
     updatedAsteroids();
 
 public slots:
