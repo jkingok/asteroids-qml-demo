@@ -10,8 +10,10 @@
 #include "asteroidfield.h"
 
 AsteroidField::AsteroidField(QQuickItem * parent)
-    : QQuickPaintedItem(parent)
+    : QQuickPaintedItem(parent), image(":/meteor.png")
 {
+
+
     creator = new AsteroidCreator();
     connect(&taskThread, &QThread::started, creator, &AsteroidCreator::createAsteroids);
     creator->moveToThread(&taskThread);
@@ -36,15 +38,27 @@ void AsteroidField::paint(QPainter *painter) {
     painter->setPen(Qt::black);
     {
         QMutexLocker lock(&mutex);
+        //painter->drawImage(QRectF(0, 0, w, h), image);
         foreach (Asteroid * a, asteroids) {
-            painter->drawEllipse(a->x() * w - a->size() * r / 2,
-                                 a->y() * h - a->size() * r / 2,
-                                 a->size() * r,
-                                 a->size() * r);
-            painter->drawLine(QPointF(a->x() * w, a->y() * h),
-                              QPointF(
-                                a->x() * w + a->size() * r / 2 * sin(a->spin() * 2 * M_PI),
-                                a->y() * h + a->size() * r / 2 * cos(a->spin() * 2 * M_PI)));
+            // Old drawing
+//            painter->drawEllipse(a->x() * w - a->size() * r / 2,
+//                                 a->y() * h - a->size() * r / 2,
+//                                 a->size() * r,
+//                                 a->size() * r);
+//            painter->drawLine(QPointF(a->x() * w, a->y() * h),
+//                              QPointF(
+//                                a->x() * w + a->size() * r / 2 * sin(a->spin() * 2 * M_PI),
+//                                a->y() * h + a->size() * r / 2 * cos(a->spin() * 2 * M_PI)));
+            // New drawing
+            QRectF re(a->x() * w - a->size() * r / 2,
+                     a->y() * h - a->size() * r / 2,
+                     a->size() * r,
+                     a->size() * r);
+//            painter->drawRect(re);
+            painter->drawImage(
+                        re,
+                        image,
+                        QRectF(((int) (a->spin() * 35) % 35) * 100, 0, 100, 100));
         }
     }
 

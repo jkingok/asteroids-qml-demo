@@ -1,6 +1,7 @@
 #ifndef ASTEROIDFIELD_H
 #define ASTEROIDFIELD_H
 
+#include <QImage>
 #include <QQuickPaintedItem>
 #include <QList>
 #include <QMutex>
@@ -36,6 +37,7 @@ protected:
     AsteroidUpdater * updater;
     QMutex mutex;
     QList<Asteroid *> asteroids;
+    QImage image;
 
     // AsteroidProvider interface
 public:

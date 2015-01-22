@@ -36,22 +36,37 @@ void AsteroidUpdater::nextUpdate()
     QList<Asteroid *> * list = provider->getList();
     QDateTime now = QDateTime::currentDateTime();
     bool changed = false;
-    foreach (Asteroid * a, *list) {
+    QMutableListIterator<Asteroid *> it(*list);
+    while (it.hasNext()) {
+        Asteroid * a = it.next();
         if (now > a->lastUpdate()) {
-            qreal delta = a->lastUpdate().msecsTo(now) / 1000.0f;
-            if (a->xVelocity() != 0.0f) {
-                a->setX(a->x() + a->xVelocity() * delta);
+            // If the asteroid is offscreen we must remove it
+            if ((a->x() + a->size() < 0 && a->xVelocity() < 0)
+                    || (a->x() - a->size() > 1 && a->xVelocity() > 0)
+                    || (a->y() + a->size() < 0 && a->yVelocity() < 0)
+                    || (a->y() - a->size() > 1 && a->yVelocity() > 0)) {
+                it.remove();
+                delete a;
                 changed = true;
+                qDebug() << "Deleted Asteroid";
+            } else {
+                qreal delta = a->lastUpdate().msecsTo(now) / 1000.0f;
+                if (a->xVelocity() != 0.0f) {
+                    a->setX(a->x() + a->xVelocity() * delta);
+                    changed = true;
+                }
+                if (a->yVelocity() != 0.0f) {
+                    a->setY(a->y() + a->yVelocity() * delta);
+                    changed = true;
+                }
+                if (a->rotationalVelocity() != 0.0f) {
+                    a->setSpin(a->spin() + a->rotationalVelocity() * delta);
+                    while (a->spin() < 0)
+                        a->setSpin(a->spin() + 1);
+                    changed = true;
+                }
+                a->setLastUpdate(now);
             }
-            if (a->yVelocity() != 0.0f) {
-                a->setY(a->y() + a->yVelocity() * delta);
-                changed = true;
-            }
-            if (a->rotationalVelocity() != 0.0f) {
-                a->setSpin(a->spin() + a->rotationalVelocity() * delta);
-                changed = true;
-            }
-            a->setLastUpdate(now);
         }
     }
     if (changed) emit updatedAsteroids();
