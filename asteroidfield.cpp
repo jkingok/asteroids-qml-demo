@@ -58,7 +58,7 @@ void AsteroidField::paint(QPainter *painter) {
             painter->drawImage(
                         re,
                         image,
-                        QRectF(((int) (a->spin() * 35) % 35) * 100, 0, 100, 100));
+                        QRectF(((int) (a->spin() * 35) % 35) * 100 + 30, 30, 40, 40));
         }
     }
 

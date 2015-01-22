@@ -5,7 +5,14 @@
 
 #include "asteroidcreator.h"
 
-AsteroidCreator::AsteroidCreator(QObject *parent) : QObject(parent), timer(NULL)
+AsteroidCreator::AsteroidCreator(QObject *parent) : QObject(parent), timer(NULL),
+    m_creationInterval(1000),
+    m_minPerInterval(1),
+    m_maxPerInterval(2),
+    m_minSize(0.05),
+    m_maxSize(0.075),
+    m_minPrimaryVelocity(-0.06),
+    m_maxPrimaryVelocity(-0.01)
 {
 }
 
@@ -20,9 +27,10 @@ void AsteroidCreator::createAsteroids()
     // Start a repeating timer that creates random asteroids
     if (timer == NULL) {
         timer = new QTimer();
+        connect(this, &AsteroidCreator::creationIntervalChanged, timer, &QTimer::setInterval);
         connect(timer, &QTimer::timeout, this, &AsteroidCreator::nextAsteroid);
     }
-    timer->setInterval(1000);
+    timer->setInterval(m_creationInterval);
     timer->setSingleShot(false);
     timer->start();
 }
@@ -30,21 +38,25 @@ void AsteroidCreator::createAsteroids()
 void AsteroidCreator::nextAsteroid()
 {
     // Lets make a random number of Asteroids per time interval
-    int n = qrand() % 3 + 1;
+    int n = (m_maxPerInterval - m_minPerInterval > 0)
+            ? (qrand() % (m_maxPerInterval - m_minPerInterval + 1)) + m_minPerInterval
+            : 1;
     for (int i = 0; i < n; i++) {
         // Now we make all Asteroids come in from the right
         // And never move right
-        qreal rsi = qrand() / (qreal) RAND_MAX * 0.05 + 0.025;
+        qreal rsi = m_minSize + (qrand() / (qreal) RAND_MAX * (m_maxSize - m_minSize));
         qreal rx = 1.0 + rsi;
         qreal ry = qrand() / (qreal) RAND_MAX;
-        qreal rxv = -(qrand() / (qreal) RAND_MAX) * 0.05;
+        qreal rxv = m_minPrimaryVelocity + ((qrand() / (qreal) RAND_MAX) * (m_maxPrimaryVelocity - m_minPrimaryVelocity));
         qreal ryv = (qrand() / (qreal) RAND_MAX - 0.5) * 0.05;
-        qreal rs = qrand() / (qreal) RAND_MAX;
+        qreal rs = qrand() / (qreal) RAND_MAX * 0.5 + 0.25;
         qreal rsv = (qrand() / (qreal) RAND_MAX - 0.5) * 0.1;
 
         qDebug() << "New Asteroid" << rx << ry << rxv << ryv << rs << rsv;
         emit newAsteroid(new Asteroid(rx, ry, rxv, ryv, rs, rsv, rsi));
     }
 }
+
+
 
 
