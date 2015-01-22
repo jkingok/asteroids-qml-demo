@@ -14,7 +14,40 @@ Window {
         Component.onCompleted: {
             field.startField();
         }
+
+        ship: ship
+
+        onShipDestroyed: {
+            ship.visible = false;
+        }
     }
+
+    Rectangle {
+        id: b1
+        x: 100
+        y: 100
+        width: 50
+        height: 50
+        color: "blue"
+
+        Component.onCompleted: {
+            field.bulletCreated(b1);
+        }
+    }
+
+    Rectangle {
+        id: ship
+        anchors.centerIn: parent
+        width: 100
+        height: 100
+        visible: true
+        color: "red"
+    }
+
+//    Image {
+//        source: "qrc:/meteor.png"
+//        anchors.fill: parent
+//    }
 
 //    MainForm {
 //        anchors.fill: parent

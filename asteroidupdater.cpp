@@ -1,6 +1,8 @@
 #include <QDebug>
 #include <QList>
 #include <QMutexLocker>
+#include <QQuickItem>
+#include <QRectF>
 #include <QTimer>
 
 #include "asteroid.h"
@@ -69,5 +71,54 @@ void AsteroidUpdater::nextUpdate()
             }
         }
     }
+
+    QList<QQuickItem *> * bullets = provider->getBullets();
+    QMutableListIterator<QQuickItem *> it2(*bullets);
+    while (it2.hasNext()) {
+        QQuickItem * b = it2.next();
+        // Check if it destroys any asteroids
+        QRectF r1(b->x() / b->parentItem()->width(), b->y() / b->parentItem()->height(),
+                  b->width() / b->parentItem()->width(), b->y() / b->parentItem()->height());
+        bool collided = false;
+        it.toFront();
+        while (it.hasNext()) {
+            Asteroid * a = it.next();
+            QRectF r2(a->x() - a->size() / 2, a->y() - a->size() / 2,
+                      a->size(), a->size());
+            if (r2.intersects(r1)) {
+                // Collision!
+                collided = true;
+                it.remove();
+                delete a;
+                changed = true;
+                qDebug() << "Destroyed Asteroid by bullet";
+            }
+        }
+        if (collided) emit bulletCollided(b);
+    }
+
+    QQuickItem * ship = provider->ship();
+    // Check if it is destroyed by any asteroids
+    if (ship->isVisible()) {
+        QRectF r1(ship->x() / ship->parentItem()->width(), ship->y() / ship->parentItem()->height(),
+                  ship->width() / ship->parentItem()->width(), ship->y() / ship->parentItem()->height());
+        bool collided = false;
+        it.toFront();
+        while (it.hasNext()) {
+            Asteroid * a = it.next();
+            QRectF r2(a->x() - a->size() / 2, a->y() - a->size() / 2,
+                      a->size(), a->size());
+            if (r2.intersects(r1)) {
+                // Collision!
+                collided = true;
+                it.remove();
+                delete a;
+                changed = true;
+                qDebug() << "Destroyed Asteroid by ship";
+            }
+        }
+        if (collided) emit shipDestroyed();
+    }
+
     if (changed) emit updatedAsteroids();
 }

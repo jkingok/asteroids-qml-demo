@@ -12,8 +12,6 @@
 AsteroidField::AsteroidField(QQuickItem * parent)
     : QQuickPaintedItem(parent), image(":/meteor.png")
 {
-
-
     creator = new AsteroidCreator();
     connect(&taskThread, &QThread::started, creator, &AsteroidCreator::createAsteroids);
     creator->moveToThread(&taskThread);
@@ -24,6 +22,8 @@ AsteroidField::AsteroidField(QQuickItem * parent)
     updater->moveToThread(&taskThread);
     connect(&taskThread, &QThread::finished, updater, &QObject::deleteLater);
     connect(updater, &AsteroidUpdater::updatedAsteroids, this, &AsteroidField::asteroidsUpdated);
+    connect(updater, &AsteroidUpdater::bulletCollided, this, &AsteroidField::bulletCollided);
+    connect(updater, &AsteroidUpdater::shipDestroyed, this, &AsteroidField::shipDestroyed);
 }
 
 AsteroidField::~AsteroidField()
@@ -64,6 +64,24 @@ void AsteroidField::paint(QPainter *painter) {
 
 }
 
+void AsteroidField::bulletCreated(QObject * b)
+{
+    QQuickItem * bullet = qobject_cast<QQuickItem *>(b);
+    if (bullet != NULL) {
+        QMutexLocker lock(&mutex);
+        bullets.push_back(bullet);
+    }
+}
+
+void AsteroidField::bulletDestroyed(QObject * b)
+{
+    QQuickItem * bullet = qobject_cast<QQuickItem *>(b);
+    if (bullet != NULL) {
+        QMutexLocker lock(&mutex);
+        bullets.removeAll(bullet);
+    }
+}
+
 void AsteroidField::startField()
 {
     qDebug() << "Starting field";
@@ -80,4 +98,14 @@ void AsteroidField::asteroidCreated(Asteroid * a)
 void AsteroidField::asteroidsUpdated()
 {
     update();
+}
+
+void AsteroidField::setShip(QQuickItem *arg)
+{
+    QMutexLocker lock(&mutex);
+    if (m_ship == arg)
+        return;
+
+    m_ship = arg;
+    emit shipChanged(arg);
 }

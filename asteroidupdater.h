@@ -5,6 +5,7 @@
 
 class Asteroid;
 class AsteroidProvider;
+class QQuickItem;
 class QTimer;
 
 class AsteroidUpdater : public QObject
@@ -15,6 +16,8 @@ public:
     ~AsteroidUpdater();
 
 signals:
+    shipDestroyed();
+    bulletCollided(QQuickItem * b);
     updatedAsteroids();
 
 public slots:
