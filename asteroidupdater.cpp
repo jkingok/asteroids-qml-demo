@@ -85,7 +85,7 @@ void AsteroidUpdater::nextUpdate()
         QQuickItem * b = it2.next();
         // Check if it destroys any asteroids
         QRectF r1(b->x() / b->parentItem()->width(), b->y() / b->parentItem()->height(),
-                  b->width() / b->parentItem()->width(), b->y() / b->parentItem()->height());
+                  b->width() / b->parentItem()->width(), b->height() / b->parentItem()->height());
         bool collided = false;
         it.toFront();
         while (it.hasNext()) {
@@ -108,7 +108,7 @@ void AsteroidUpdater::nextUpdate()
     // Check if it is destroyed by any asteroids
     if (ship->isVisible()) {
         QRectF r1(ship->x() / ship->parentItem()->width(), ship->y() / ship->parentItem()->height(),
-                  ship->width() / ship->parentItem()->width(), ship->y() / ship->parentItem()->height());
+                  ship->width() / ship->parentItem()->width(), ship->height() / ship->parentItem()->height());
         bool collided = false;
         it.toFront();
         while (it.hasNext()) {
