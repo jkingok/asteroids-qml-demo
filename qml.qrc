@@ -3,5 +3,11 @@
         <file>main.qml</file>
         <file>MainForm.ui.qml</file>
         <file>meteor.png</file>
+        <file>Bullet.qml</file>
+        <file>explosion.gif</file>
+        <file>ShipExplosion.qml</file>
+        <file>Smoke.png</file>
+        <file>spaceship1__flyingA.gif</file>
+        <file>cityscape.gif</file>
     </qresource>
 </RCC>
