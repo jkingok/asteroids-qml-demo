@@ -9,6 +9,13 @@ Window {
     width: 1022
     height: 412
     visible: true
+
+    function createBullet() {
+        var component = Qt.createComponent("Bullet.qml");
+        var object = component.createObject(gameWindow, {
+                                                "x":rocket.x + rocket.width, "y":rocket.y + rocket.height/2, "field": field});
+    }
+
     Item {
         id: gameWindow
         ShaderEffectSource {
@@ -109,10 +116,7 @@ Window {
                 moveRight = true
             }
             if (event.key == Qt.Key_Space) {
-                var component = Qt.createComponent("Bullet.qml");
-                var object = component.createObject(gameWindow, {
-                                                        "x":rocket.x + rocket.width, "y":rocket.y + rocket.height/2, "field": field});
-
+                createBullet();
             }
         }
 
@@ -154,8 +158,17 @@ Window {
                 gameWindow.state = "done"
             }
 
+            MouseArea {
+                anchors.fill: parent
+
+                onClicked: {
+                    createBullet();
+                }
+            }
+
             source: "qrc:/spaceship1__flyingA.gif"
             rotation: 90
+            visible: false
             //visible: gameWindow.state==="play"
         }
 
