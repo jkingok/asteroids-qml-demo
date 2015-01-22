@@ -284,7 +284,31 @@ Window {
 
         onBulletCollided: {
             bullet.collided();
+            asteroidExplosion.x = bullet.x + bullet.width / 2
+            asteroidExplosion.y = bullet.y + bullet.height / 2
+            asteroidExplosion.pulse(500)
         }
+    }
+
+    ParticleSystem {
+
+        Emitter {
+            id: asteroidExplosion
+            enabled: false
+            emitRate: 700
+            lifeSpan: 500
+            size: 16
+            velocity: AngleDirection { magnitude: 100; angleVariation: 360 }
+        }
+
+        ImageParticle {
+            source: "qrc:/particle.png"
+            blueVariation: 1.0
+            colorVariation: 0.1
+            alpha: 0.5
+        }
+
+
     }
 
     Text {

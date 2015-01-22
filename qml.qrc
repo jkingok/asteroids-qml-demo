@@ -9,5 +9,6 @@
         <file>Smoke.png</file>
         <file>spaceship1__flyingA.gif</file>
         <file>cityscape.gif</file>
+        <file>particle.png</file>
     </qresource>
 </RCC>
