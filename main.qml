@@ -207,34 +207,6 @@ Window {
 
         }
 
-
-
-        ParticleSystem {
-            id: particleSystem
-            anchors.fill: parent
-            Emitter {
-                group: "stars"
-                emitRate: 10
-                lifeSpan: 40000
-                enabled: true
-                startTime: 40000
-                size: 20
-                sizeVariation: 10
-                velocity: PointDirection {y: 20; yVariation: 10}
-                width: parent.width
-            }
-
-            ImageParticle {
-                id: stars
-                z: 1
-                groups: ["stars"]
-                source: "Smoke.png"
-                color: "white"
-                colorVariation: 0.1
-                alpha: 0.5
-            }
-
-        }
         ShaderEffect {
             anchors.fill: parent
             property variant src: shaderSrc
@@ -288,6 +260,33 @@ Window {
             asteroidExplosion.y = bullet.y + bullet.height / 2
             asteroidExplosion.pulse(500)
         }
+    }
+
+    ParticleSystem {
+        id: particleSystem
+        anchors.fill: parent
+        Emitter {
+            group: "stars"
+            emitRate: 10
+            lifeSpan: 40000
+            enabled: true
+            startTime: 40000
+            size: 20
+            sizeVariation: 10
+            velocity: PointDirection {y: 20; yVariation: 10}
+            width: parent.width
+        }
+
+        ImageParticle {
+            id: stars
+            z: 1
+            groups: ["stars"]
+            source: "Smoke.png"
+            color: "white"
+            colorVariation: 0.1
+            alpha: 0.5
+        }
+
     }
 
     ParticleSystem {
