@@ -6,7 +6,8 @@
 #include <QPoint>
 #include <QThread>
 
-#include <asteroidcreator.h>
+class Asteroid;
+class AsteroidCreator;
 
 class AsteroidField : public QQuickPaintedItem
 {
@@ -21,12 +22,12 @@ public:
 public slots:
     void startField();
 
-    void asteroidCreated(int x, int y);
+    void asteroidCreated(Asteroid * a);
 
 protected:
     QThread creatorThread;
     AsteroidCreator * creator;
-    QList<QPoint> asteroids;
+    QList<Asteroid *> asteroids;
 };
 
 #endif // ASTEROIDFIELD_H

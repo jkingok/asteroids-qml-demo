@@ -1,6 +1,8 @@
 #include <QDebug>
 #include <QTimer>
 
+#include "asteroid.h"
+
 #include "asteroidcreator.h"
 
 AsteroidCreator::AsteroidCreator(QObject *parent) : QObject(parent)
@@ -27,11 +29,11 @@ void AsteroidCreator::createAsteroids()
 
 void AsteroidCreator::nextAsteroid()
 {
-    int rx = qrand() % 360;
-    int ry = qrand() % 360;
+    qreal rx = qrand() / (qreal) RAND_MAX;
+    qreal ry = qrand() / (qreal) RAND_MAX;
 
     qDebug() << "New Asteroid" << rx << ry;
-    emit newAsteroid(rx, ry);
+    emit newAsteroid(new Asteroid(rx, ry, 0, 0, 0, 0, 0.1f));
 }
 
 

@@ -3,7 +3,9 @@ TEMPLATE = app
 QT += qml quick
 
 SOURCES += main.cpp \
-    asteroidfield.cpp
+    asteroidfield.cpp \
+    asteroidcreator.cpp \
+    asteroid.cpp
 
 RESOURCES += qml.qrc
 
@@ -14,4 +16,6 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 HEADERS += \
-    asteroidfield.h
+    asteroidfield.h \
+    asteroidcreator.h \
+    asteroid.h

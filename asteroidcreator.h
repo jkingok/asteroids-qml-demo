@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+class Asteroid;
 class QTimer;
 
 class AsteroidCreator : public QObject
@@ -13,7 +14,7 @@ public:
     ~AsteroidCreator();
 
 signals:
-    newAsteroid(int x, int y);
+    newAsteroid(Asteroid * asteroid);
 
 public slots:
     void createAsteroids();

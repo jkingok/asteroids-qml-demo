@@ -1,7 +1,10 @@
-#include "asteroidfield.h"
-
 #include <QDebug>
 #include <QPainter>
+
+#include "asteroid.h"
+#include "asteroidcreator.h"
+
+#include "asteroidfield.h"
 
 AsteroidField::AsteroidField(QQuickItem * parent)
     : QQuickPaintedItem(parent)
@@ -18,9 +21,13 @@ AsteroidField::~AsteroidField()
 }
 
 void AsteroidField::paint(QPainter *painter) {
+    int w = width();
+    int h = height();
+    int r = qMin(w, h);
+
     painter->setPen(Qt::black);
-    foreach (QPoint p, asteroids) {
-        painter->drawEllipse(p.x(), p.y(), 100, 100);
+    foreach (Asteroid * a, asteroids) {
+        painter->drawEllipse(a->x() * w, a->y() * h, a->size() * r, a->size() * r);
     }
 }
 
@@ -30,8 +37,8 @@ void AsteroidField::startField()
     creatorThread.start();
 }
 
-void AsteroidField::asteroidCreated(int x, int y)
+void AsteroidField::asteroidCreated(Asteroid * a)
 {
-    asteroids.push_back(QPoint(x, y));
+    asteroids.push_back(a);
     update();
 }
