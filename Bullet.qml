@@ -15,6 +15,8 @@ Rectangle {
         duration: 2000
         onRunningChanged: {
             if (!running) {
+                console.log("Destroyed bullet without collision");
+                field.bulletDestroyed(rect);
                 rect.destroy();
             }
         }
@@ -31,6 +33,7 @@ Rectangle {
 
     function collided() {
         // delete this bullet
+        console.log("Destroyed bullet after collision")
         field.bulletDestroyed(rect);
         rect.destroy()
         // create explosion

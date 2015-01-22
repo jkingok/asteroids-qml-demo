@@ -11,9 +11,11 @@ Window {
     visible: true
 
     function createBullet() {
+        if (gameWindow.state === "play") {
         var component = Qt.createComponent("Bullet.qml");
         var object = component.createObject(gameWindow, {
                                                 "x":rocket.x + rocket.width, "y":rocket.y + rocket.height/2, "field": field});
+        }
     }
 
     Item {

@@ -83,27 +83,30 @@ void AsteroidUpdater::nextUpdate()
     QMutableListIterator<QQuickItem *> it2(*bullets);
     while (it2.hasNext()) {
         QQuickItem * b = it2.next();
-        // Check if it destroys any asteroids
-        QRectF r1(b->x() / b->parentItem()->width(), b->y() / b->parentItem()->height(),
-                  b->width() / b->parentItem()->width(), b->height() / b->parentItem()->height());
-        int collided = 0;
-        it.toFront();
-        while (it.hasNext()) {
-            Asteroid * a = it.next();
-            QRectF r2(a->x() - a->size() / 2, a->y() - a->size() / 2,
-                      a->size(), a->size());
-            if (r2.intersects(r1)) {
-                // Collision!
-                collided++;
-                it.remove();
-                delete a;
-                changed = true;
-                qDebug() << "Destroyed Asteroid by bullet";
+        if (b != NULL) {
+            // Check if it destroys any asteroids
+            QRectF r1(b->x() / b->parentItem()->width(), b->y() / b->parentItem()->height(),
+                      b->width() / b->parentItem()->width(), b->height() / b->parentItem()->height());
+            int collided = 0;
+            it.toFront();
+            while (it.hasNext()) {
+                Asteroid * a = it.next();
+                QRectF r2(a->x() - a->size() / 2, a->y() - a->size() / 2,
+                          a->size(), a->size());
+                if (r2.intersects(r1)) {
+                    // Collision!
+                    collided++;
+                    it.remove();
+                    delete a;
+                    changed = true;
+                    qDebug() << "Destroyed Asteroid by bullet";
+                }
             }
-        }
-        if (collided > 0) {
-            emit bulletCollided(b);
-            emit bulletDestroyedAsteroids(collided);
+            if (collided > 0) {
+                it2.remove();
+                emit bulletCollided(b);
+                emit bulletDestroyedAsteroids(collided);
+            }
         }
     }
 

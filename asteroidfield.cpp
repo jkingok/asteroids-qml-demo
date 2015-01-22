@@ -70,6 +70,7 @@ void AsteroidField::bulletCreated(QObject * b)
     QQuickItem * bullet = qobject_cast<QQuickItem *>(b);
     if (bullet != NULL) {
         QMutexLocker lock(&mutex);
+        qDebug() << "Added a bullet";
         bullets.push_back(bullet);
     }
 }
@@ -78,8 +79,11 @@ void AsteroidField::bulletDestroyed(QObject * b)
 {
     QQuickItem * bullet = qobject_cast<QQuickItem *>(b);
     if (bullet != NULL) {
+        qDebug() << "Waiting for lock...";
         QMutexLocker lock(&mutex);
-        bullets.removeAll(bullet);
+        qDebug() << "Deleted" << bullets.removeAll(bullet);
+    } else {
+        qDebug() << "Can't delete not an item";
     }
 }
 
