@@ -57,7 +57,7 @@ public:
     }
 
 signals:
-    newAsteroid(Asteroid * asteroid);
+    void newAsteroid(Asteroid * asteroid);
 
     void creationIntervalChanged(int arg);
 

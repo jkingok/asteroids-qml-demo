@@ -16,10 +16,10 @@ public:
     ~AsteroidUpdater();
 
 signals:
-    shipDestroyed();
-    bulletCollided(QQuickItem * b);
-    bulletDestroyedAsteroids(int number);
-    updatedAsteroids();
+    void shipDestroyed();
+    void bulletCollided(QQuickItem * b);
+    void bulletDestroyedAsteroids(int number);
+    void updatedAsteroids();
 
 public slots:
     void stopAsteroids();
