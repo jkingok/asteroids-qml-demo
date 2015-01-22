@@ -1,6 +1,7 @@
 #ifndef ASTEROID_H
 #define ASTEROID_H
 
+#include <QDateTime>
 #include <QObject>
 
 class Asteroid : public QObject
@@ -14,6 +15,7 @@ class Asteroid : public QObject
     Q_PROPERTY(qreal spin READ spin WRITE setSpin NOTIFY spinChanged)
     Q_PROPERTY(qreal rotationalVelocity READ rotationalVelocity WRITE setRotationalVelocity NOTIFY rotationalVelocityChanged)
     Q_PROPERTY(qreal size READ size WRITE setSize NOTIFY sizeChanged)
+    Q_PROPERTY(QDateTime lastUpdate READ lastUpdate WRITE setLastUpdate NOTIFY lastUpdateChanged)
 
 public:
     explicit Asteroid(qreal x, qreal y, qreal xV, qreal yV, qreal sp, qreal rV, qreal si, QObject *parent = 0);
@@ -54,6 +56,11 @@ public:
         return m_size;
     }
 
+    QDateTime lastUpdate() const
+    {
+        return m_lastUpdate;
+    }
+
 signals:
 
     void xChanged(qreal arg);
@@ -69,6 +76,8 @@ signals:
     void rotationalVelocityChanged(qreal arg);
 
     void sizeChanged(qreal arg);
+
+    void lastUpdateChanged(QDateTime arg);
 
 public slots:
     void setX(qreal arg)
@@ -128,6 +137,15 @@ public slots:
         emit sizeChanged(arg);
     }
 
+    void setLastUpdate(QDateTime arg)
+    {
+        if (m_lastUpdate == arg)
+            return;
+
+        m_lastUpdate = arg;
+        emit lastUpdateChanged(arg);
+    }
+
 protected:
     qreal m_x;
 
@@ -142,6 +160,8 @@ protected:
     qreal m_rotationalVelocity;
 
     qreal m_size;
+
+    QDateTime m_lastUpdate;
 };
 
 #endif // ASTEROID_H

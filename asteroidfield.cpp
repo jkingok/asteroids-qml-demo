@@ -3,6 +3,7 @@
 
 #include "asteroid.h"
 #include "asteroidcreator.h"
+#include "asteroidupdater.h"
 
 #include "asteroidfield.h"
 
@@ -10,10 +11,15 @@ AsteroidField::AsteroidField(QQuickItem * parent)
     : QQuickPaintedItem(parent)
 {
     creator = new AsteroidCreator();
-    connect(&creatorThread, &QThread::started, creator, &AsteroidCreator::createAsteroids);
-    creator->moveToThread(&creatorThread);
-    connect(&creatorThread, &QThread::finished, creator, &QObject::deleteLater);
+    connect(&taskThread, &QThread::started, creator, &AsteroidCreator::createAsteroids);
+    creator->moveToThread(&taskThread);
+    connect(&taskThread, &QThread::finished, creator, &QObject::deleteLater);
     connect(creator, &AsteroidCreator::newAsteroid, this, &AsteroidField::asteroidCreated);
+    updater = new AsteroidUpdater(this);
+    connect(&taskThread, &QThread::started, updater, &AsteroidUpdater::updateAsteroids);
+    updater->moveToThread(&taskThread);
+    connect(&taskThread, &QThread::finished, updater, &QObject::deleteLater);
+    connect(updater, &AsteroidUpdater::updatedAsteroids, this, &AsteroidField::asteroidsUpdated);
 }
 
 AsteroidField::~AsteroidField()
@@ -26,19 +32,29 @@ void AsteroidField::paint(QPainter *painter) {
     int r = qMin(w, h);
 
     painter->setPen(Qt::black);
-    foreach (Asteroid * a, asteroids) {
-        painter->drawEllipse(a->x() * w, a->y() * h, a->size() * r, a->size() * r);
+    {
+        QMutexLocker lock(&mutex);
+        foreach (Asteroid * a, asteroids) {
+            painter->drawEllipse(a->x() * w, a->y() * h, a->size() * r, a->size() * r);
+        }
     }
+
 }
 
 void AsteroidField::startField()
 {
     qDebug() << "Starting field";
-    creatorThread.start();
+    taskThread.start();
 }
 
 void AsteroidField::asteroidCreated(Asteroid * a)
 {
+    QMutexLocker lock(&mutex);
     asteroids.push_back(a);
+    update();
+}
+
+void AsteroidField::asteroidsUpdated()
+{
     update();
 }

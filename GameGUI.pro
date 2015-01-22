@@ -5,7 +5,8 @@ QT += qml quick
 SOURCES += main.cpp \
     asteroidfield.cpp \
     asteroidcreator.cpp \
-    asteroid.cpp
+    asteroid.cpp \
+    asteroidupdater.cpp
 
 RESOURCES += qml.qrc
 
@@ -18,4 +19,6 @@ include(deployment.pri)
 HEADERS += \
     asteroidfield.h \
     asteroidcreator.h \
-    asteroid.h
+    asteroid.h \
+    asteroidupdater.h \
+    asteroidprovider.h

@@ -3,13 +3,17 @@
 
 #include <QQuickPaintedItem>
 #include <QList>
+#include <QMutex>
 #include <QPoint>
 #include <QThread>
 
+#include "asteroidprovider.h"
+
 class Asteroid;
 class AsteroidCreator;
+class AsteroidUpdater;
 
-class AsteroidField : public QQuickPaintedItem
+class AsteroidField : public QQuickPaintedItem, public AsteroidProvider
 {
     Q_OBJECT
 
@@ -24,10 +28,19 @@ public slots:
 
     void asteroidCreated(Asteroid * a);
 
+    void asteroidsUpdated();
+
 protected:
-    QThread creatorThread;
+    QThread taskThread;
     AsteroidCreator * creator;
+    AsteroidUpdater * updater;
+    QMutex mutex;
     QList<Asteroid *> asteroids;
+
+    // AsteroidProvider interface
+public:
+    QMutex *getMutex() { return &mutex; }
+    QList<Asteroid *> *getList() { return &asteroids; }
 };
 
 #endif // ASTEROIDFIELD_H
