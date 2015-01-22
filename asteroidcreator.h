@@ -76,6 +76,8 @@ signals:
 public slots:
     void createAsteroids();
 
+    void stopAsteroids();
+
     void setCreationInterval(int arg)
     {
         if (m_creationInterval == arg)

@@ -7,6 +7,9 @@ Rectangle {
     color: "white"
     border.width: 1
     border.color: "black"
+
+    property var field
+
     NumberAnimation on opacity {
         to: 0
         duration: 2000
@@ -23,10 +26,12 @@ Rectangle {
 
     Component.onCompleted: {
         // Let Josh know about this bullet
+        field.bulletCreated(rect);
     }
 
-    function onHitAsteroid(x, y) {
+    function collided() {
         // delete this bullet
+        field.bulletDestroyed(rect);
         rect.destroy()
         // create explosion
     }

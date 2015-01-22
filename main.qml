@@ -28,10 +28,10 @@ Window {
             State {
                 name: "play"
                 PropertyChanges {target: startText; visible: false}
+                PropertyChanges {target: rocket; visible: true}
                 StateChangeScript {
                     name: "startGame"
                     script: {
-
                         field.startField();
                     }
                 }
@@ -41,6 +41,13 @@ Window {
                 name: "done"
                 when: rocket.isAlive==FALSE
                 PropertyChanges {target: overText; visible: false}
+                PropertyChanges {target: rocket; visible: false}
+                StateChangeScript {
+                    name: "stopGame"
+                    script: {
+                        field.stopField();
+                    }
+                }
             }
 
         ]
@@ -104,7 +111,7 @@ Window {
             if (event.key == Qt.Key_Space) {
                 var component = Qt.createComponent("Bullet.qml");
                 var object = component.createObject(gameWindow, {
-                                                        "x":rocket.x + rocket.width, "y":rocket.y + rocket.height/2});
+                                                        "x":rocket.x + rocket.width, "y":rocket.y + rocket.height/2, "field": field});
 
             }
         }
@@ -149,7 +156,7 @@ Window {
 
             source: "qrc:/spaceship1__flyingA.gif"
             rotation: 90
-            visible: gameWindow.state==="play"
+            //visible: gameWindow.state==="play"
         }
 
         Text {
@@ -250,6 +257,16 @@ Window {
     AsteroidField {
         id: field
 
+        ship: rocket
+
         anchors.fill: parent
+
+        onShipDestroyed: {
+            rocket.killMeNow();
+        }
+
+        onBulletCollided: {
+            bullet.collided();
+        }
     }
 }

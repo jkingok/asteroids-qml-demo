@@ -85,7 +85,21 @@ void AsteroidField::bulletDestroyed(QObject * b)
 void AsteroidField::startField()
 {
     qDebug() << "Starting field";
-    taskThread.start();
+    if (!taskThread.isRunning())
+        taskThread.start();
+    else {
+        QMetaObject::invokeMethod(creator, "createAsteroids");
+        QMetaObject::invokeMethod(updater, "updateAsteroids");
+    }
+
+
+}
+
+void AsteroidField::stopField()
+{
+    qDebug() << "Stopping field";
+    QMetaObject::invokeMethod(creator, "stopAsteroids");
+    QMetaObject::invokeMethod(updater, "stopAsteroids");
 }
 
 void AsteroidField::asteroidCreated(Asteroid * a)

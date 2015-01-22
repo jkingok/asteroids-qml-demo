@@ -9,7 +9,7 @@
 #include "asteroidprovider.h"
 #include "asteroidupdater.h"
 
-AsteroidUpdater::AsteroidUpdater(AsteroidProvider * provider, QObject *parent) : QObject(parent), provider(provider), timer(NULL)
+AsteroidUpdater::AsteroidUpdater(AsteroidProvider * provider, QObject *parent) : QObject(parent), provider(provider), timer(NULL), m_stopping(false)
 {
 
 }
@@ -29,7 +29,14 @@ void AsteroidUpdater::updateAsteroids()
     }
     timer->setInterval(50);
     timer->setSingleShot(false);
+    m_stopping = false;
     timer->start();
+}
+
+void AsteroidUpdater::stopAsteroids()
+{
+    // Will stop when there are no more Asteroids
+    m_stopping = true;
 }
 
 void AsteroidUpdater::nextUpdate()
@@ -121,4 +128,9 @@ void AsteroidUpdater::nextUpdate()
     }
 
     if (changed) emit updatedAsteroids();
+
+    if (m_stopping && list->isEmpty()) {
+        qDebug() << "No more Asteroids to update";
+        timer->stop();
+    }
 }

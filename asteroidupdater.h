@@ -21,6 +21,8 @@ signals:
     updatedAsteroids();
 
 public slots:
+    void stopAsteroids();
+
     void updateAsteroids();
 
 private slots:
@@ -28,6 +30,8 @@ private slots:
 
 protected:
     QTimer * timer;
+
+    bool m_stopping;
 
 private:
     AsteroidProvider * provider;

@@ -35,6 +35,12 @@ void AsteroidCreator::createAsteroids()
     timer->start();
 }
 
+void AsteroidCreator::stopAsteroids()
+{
+    qDebug() << "No more Asteroids";
+    timer->stop();
+}
+
 void AsteroidCreator::nextAsteroid()
 {
     // Lets make a random number of Asteroids per time interval

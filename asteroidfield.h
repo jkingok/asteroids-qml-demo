@@ -28,6 +28,7 @@ public:
 
 public slots:
     void startField();
+    void stopField();
 
     void asteroidCreated(Asteroid * a);
 
