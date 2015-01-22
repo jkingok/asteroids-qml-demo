@@ -154,7 +154,8 @@ Window {
                 visible = false
                 var component = Qt.createComponent("ShipExplosion.qml");
                 var object = component.createObject(gameWindow, {
-                                                        "x":rocket.x + rocket.width/2, "y":rocket.y + rocket.height/2});
+                                                        "x": rocket.x, "y": rocket.y,
+                                                        "width":rocket.width, "height":rocket.height});
                 gameWindow.state = "done"
             }
 
