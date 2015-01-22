@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <QDebug>
 #include <QPainter>
 
@@ -35,7 +37,14 @@ void AsteroidField::paint(QPainter *painter) {
     {
         QMutexLocker lock(&mutex);
         foreach (Asteroid * a, asteroids) {
-            painter->drawEllipse(a->x() * w, a->y() * h, a->size() * r, a->size() * r);
+            painter->drawEllipse(a->x() * w - a->size() * r / 2,
+                                 a->y() * h - a->size() * r / 2,
+                                 a->size() * r,
+                                 a->size() * r);
+            painter->drawLine(QPointF(a->x() * w, a->y() * h),
+                              QPointF(
+                                a->x() * w + a->size() * r / 2 * sin(a->spin() * 2 * M_PI),
+                                a->y() * h + a->size() * r / 2 * cos(a->spin() * 2 * M_PI)));
         }
     }
 

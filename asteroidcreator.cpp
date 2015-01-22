@@ -22,7 +22,7 @@ void AsteroidCreator::createAsteroids()
         timer = new QTimer();
         connect(timer, &QTimer::timeout, this, &AsteroidCreator::nextAsteroid);
     }
-    timer->setInterval(3000);
+    timer->setInterval(1500);
     timer->setSingleShot(false);
     timer->start();
 }
@@ -33,9 +33,12 @@ void AsteroidCreator::nextAsteroid()
     qreal ry = qrand() / (qreal) RAND_MAX;
     qreal rxv = (qrand() / (qreal) RAND_MAX - 0.5) * 0.1;
     qreal ryv = (qrand() / (qreal) RAND_MAX - 0.5) * 0.1;
+    qreal rs = qrand() / (qreal) RAND_MAX;
+    qreal rsv = (qrand() / (qreal) RAND_MAX - 0.5) * 0.1;
+    qreal rsi = qrand() / (qreal) RAND_MAX * 0.1 + 0.1;
 
-    qDebug() << "New Asteroid" << rx << ry << rxv << ryv;
-    emit newAsteroid(new Asteroid(rx, ry, rxv, ryv, 0, 0, 0.1f));
+    qDebug() << "New Asteroid" << rx << ry << rxv << ryv << rs << rsv;
+    emit newAsteroid(new Asteroid(rx, ry, rxv, ryv, rs, rsv, rsi));
 }
 
 
